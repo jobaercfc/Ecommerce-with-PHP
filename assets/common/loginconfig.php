@@ -7,8 +7,8 @@
             <ul class="nav navbar-top-links navbar-right">
                 <li>
                     <div style="padding: 10px;">
-                        <a class="btn btn-sm btn-danger" onclick="logout()"><i
-                                    class="fa fa-sign-out"></i> Logout
+                        <a class="btn btn-sm btn-danger" href="logout.php">
+                            <i class="fa fa-sign-out"></i> Logout
                         </a>
                     </div>
 

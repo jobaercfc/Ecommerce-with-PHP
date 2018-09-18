@@ -1,3 +1,5 @@
+<?php include "dbconfig.php";?>
+
 <!DOCTYPE html>
 <html>
 
@@ -27,7 +29,7 @@
                         <a>E-commerce</a>
                     </li>
                     <li class="breadcrumb-item active">
-                        <strong>Wishlist</strong>
+                        <strong>Cart</strong>
                     </li>
                 </ol>
             </div>
@@ -35,6 +37,28 @@
 
             </div>
         </div>
+
+        <?php
+        if(isset($_SESSION["msg"])){
+            echo '
+                    <script>
+                         setTimeout(function () {
+                            $(\'#feedback\').fadeOut(4000);
+                         }, 5000);
+                    </script>
+                ';
+            echo '
+                <div id="feedback">
+                    <div class="alert alert-success">';
+            echo $_SESSION["msg"];
+            unset($_SESSION["msg"]);
+            echo '
+                    </div>
+                </div>
+                ';
+        }
+
+        ?>
 
         <div class="wrapper wrapper-content animated fadeInRight ecommerce">
 
@@ -44,69 +68,99 @@
 
                     <div class="ibox">
                         <div class="ibox-title">
-                            <span class="float-right">(<strong>5</strong>) items</span>
-                            <h5>Items in your cart</h5>
-                        </div>
-                        <?php
-                            for($i = 0; $i < 2; $i++){
+                            <?php
+                                $sqlCountCart = "SELECT COUNT(id) as totalItem FROM `cartDetails` WHERE userID='$uid'";
+                                $runCountCart = $conn->prepare($sqlCountCart);
+                                $runCountCart->execute();
+
+                                $row = $runCountCart->fetch(PDO::FETCH_ASSOC);
+
+                                $totalItem = $row["totalItem"];
+
                                 echo '
-                                    <div class="ibox-content">
-                                        <div class="table-responsive">
-                                            <table class="table shoping-cart-table">
-            
-                                                <tbody>
-                                                <tr>
-                                                    <td width="90">
-                                                        <div class="cart-product-imitation">
-                                                        </div>
-                                                    </td>
-                                                    <td class="desc">
-                                                        <h3>
-                                                            <a href="#" class="text-navy">
-                                                                Desktop publishing software
-                                                            </a>
-                                                        </h3>
-                                                        <p class="small">
-                                                            It is a long established fact that a reader will be distracted by the readable
-                                                            content of a page when looking at its layout. The point of using Lorem Ipsum is
-                                                        </p>
-                                                        <dl class="small m-b-none">
-                                                            <dt>Description lists</dt>
-                                                            <dd>A description list is perfect for defining terms.</dd>
-                                                        </dl>
-            
-                                                        <div class="m-t-sm">
-                                                            <a href="#" class="text-muted"><i class="fa fa-gift"></i> Add gift package</a>
-                                                            |
-                                                            <a href="#" class="text-muted"><i class="fa fa-trash"></i> Remove item</a>
-                                                        </div>
-                                                    </td>
-            
-                                                    <td>
-                                                        $180,00
-                                                        <s class="small text-muted">$230,00</s>
-                                                    </td>
-                                                    <td width="65">
-                                                        <input type="text" class="form-control" placeholder="1">
-                                                    </td>
-                                                    <td>
-                                                        <h4>
-                                                            $180,00
-                                                        </h4>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-            
-                                    </div>
+                                    <span class="float-right">(<strong>'.$totalItem.'</strong>) items</span>
+                                    <h5>Items in your cart</h5>
                                 ';
-                            }
-                        ?>
+
+                            ?>
+
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table class="table shoping-cart-table" id="shopping-cart-table">
+                                    <tbody>
+                                    <?php
+
+                                        $sql = "SELECT * FROM `cartDetails` INNER JOIN products on (cartDetails.productID = products.id) WHERE userID = '$uid'";
+                                        $run = $conn->prepare($sql);
+                                        $run->execute();
+
+                                        $totalcheckOut = 0;
+
+                                        $ids = array();
+
+
+
+                                        if($run->rowCount() > 0) {
+                                            while ($row = $run->fetch(PDO::FETCH_ASSOC)) {
+                                                $title = $row["productName"];
+                                                $price = $row["price"];
+                                                $description = $row["description"];
+                                                $stockquantity = $row["inStockQuantity"];
+                                                $totalSoldQuantity = $row["totalSoldQuantity"];
+                                                //$image1 = $row["path1"];
+                                                //$category = $row["categoryName"];
+                                                //$authorName = $row["phoneNumber"];
+                                                $createdDate = $row["createdDate"];
+                                                $pid = $row["productID"];
+                                                $totalcheckOut += $price;
+                                                array_push($ids,$pid);
+                                                echo '
+                                                         
+                                                    <tr>
+                                                        
+                                                        <td class="desc">
+                                                            <h3>
+                                                                <a href="#" class="text-navy">
+                                                                    '.$title.'
+                                                                </a>
+                                                            </h3>
+                                                            <p class="small">
+                                                                '.$description.'
+                                                            </p>
+                                                            
+                                                            <div class="m-t-sm">
+                                                                
+                                                                <a href="#" class="text-muted" id="removeFromCart" pid = '.$pid.'><i class="fa fa-trash" style="color: red"></i> Remove item</a href="#">
+                                                            </div>
+                                                        </td>
+                                                        
+                                                        <td width="80">
+                                                            <input type="number" min="1" max="'.($stockquantity - $totalSoldQuantity).'" class="form-control qty" value="1" onchange="cart()" placeholder="1"/>
+                                                        </td>
+                                                        
+                                                        <td style="width: 150px">
+                                                            <input type="text" class="form-control" value="'.$price.'" readonly="readonly">&#2547;/Unit
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                                
+                                                ';
+
+                                            }
+                                        }
+
+                                    ?>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
                         <div class="ibox-content">
 
-                            <button class="btn btn-primary float-right"><i class="fa fa fa-shopping-cart"></i> Checkout</button>
-                            <button class="btn btn-white"><i class="fa fa-arrow-left"></i> Continue shopping</button>
+                            <a href="product.php" class="btn btn-white"><i class="fa fa-arrow-left"></i> Continue shopping</a>
 
                         </div>
                     </div>
@@ -122,8 +176,8 @@
                             <span>
                                 Total
                             </span>
-                            <h2 class="font-bold">
-                                $390,00
+                            <h2 class="font-bold" >
+                                &#2547; <span id="total-checkout"><?php echo $totalcheckOut;?></span>
                             </h2>
 
                             <hr>
@@ -132,8 +186,36 @@
                             </span>
                             <div class="m-t-sm">
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-shopping-cart"></i> Checkout</a>
-                                    <a href="#" class="btn btn-white btn-sm"> Cancel</a>
+                                    <a href="#" class="btn btn-primary btn-sm" id="btn-checkout" idArray = '<?php echo json_encode($ids);?>'><i class="fa fa-shopping-cart"></i> Checkout</a>
+                                    <a data-toggle="modal" class="btn btn-danger btn-sm" href="#modal-form">Apply Promo</a>
+                                </div>
+                            </div>
+                            <div id="modal-form" class="modal fade" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-sm-6 b-r"><h3 class="m-t-none m-b">Enter promo</h3>
+
+
+
+                                                    <form role="form">
+                                                        <div class="form-group"><label>Promo</label> <input type="text" placeholder="Enter promo" class="form-control"></div>
+                                                        <div>
+                                                            <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Go</strong></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <h4>Referral</h4>
+                                                    <p>You can refer your friend</p>
+                                                    <p class="text-center">
+                                                        Your referral code : ecom123
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -65,23 +65,21 @@ include "dbconfig.php";
                                         <div class="ibox-content product-box">
                 
                                             <div class="product-imitation">
-                                                <img width=235.75px" height="200px" src="assets/img/products/'.$image1.'" alt="image" />
+                                                <img width="222" height="200" align="center" src="assets/img/products/'.$image1.'" alt="image" />
                                             </div>
                                             <div class="product-desc">
                                                             <span class="product-price">
-                                                                BDT '.$price.'
+                                                                &#2547; '.$price.'
                                                             </span>
                                                 <small class="text-muted">'.$category.'</small>
                                                 <a href="#" class="product-name"> '.$title.'</a>
                 
                 
                 
-                                                <div class="small m-t-xs">
-                                                    '.$description.'
-                                                </div>
+                                                
                                                 <div class="m-t text-right">
                 
-                                                    <a href="product-details.php?p='.$pid.'" class="btn btn-xs btn-outline btn-primary">Info<i class="fa fa-long-arrow-right"></i> </a>
+                                                    <a href="product_details.php?p='.$pid.'" class="btn btn-xs btn-outline btn-primary">Info<i class="fa fa-long-arrow-right"></i> </a>
                                                 </div>
                 
                                             </div>

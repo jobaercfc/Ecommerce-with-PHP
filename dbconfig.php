@@ -9,7 +9,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$db = "ecomm";
+$db = "bihar_db";
 
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);

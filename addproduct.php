@@ -1,7 +1,5 @@
 <?php
     include "dbconfig.php";
-    session_start();
-    $uid = $_SESSION["u_id"];
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +40,28 @@
             </div>
         </div>
 
+        <?php
+            if(isset($_SESSION["msg"])){
+                echo '
+                    <script>
+                         setTimeout(function () {
+                            $(\'#feedback\').fadeOut(4000);
+                         }, 5000);
+                    </script>
+                ';
+                echo '
+                    <div id="feedback">
+                        <div class="alert alert-success">';
+                echo $_SESSION["msg"];
+                unset($_SESSION["msg"]);
+                echo '
+                        </div>
+                    </div>
+                    ';
+            }
+
+        ?>
+
         <div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="row">
@@ -72,26 +92,22 @@
                                         $uploadOk = 0;
                                     }
 
-// Check if file already exists
-                                    if (file_exists($target_file)) {
-                                        echo "Sorry, file already exists.";
-                                        $uploadOk = 0;
-                                    }
-// Check file size
+
+                                    // Check file size
                                     if ($_FILES["fileToUpload"]["size"] > 500000) {
                                         echo "Sorry, your file is too large.";
                                         $uploadOk = 0;
                                     }
-// Allow certain file formats
+                                    // Allow certain file formats
                                     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
                                         && $imageFileType != "gif" ) {
                                         echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
                                         $uploadOk = 0;
                                     }
-// Check if $uploadOk is set to 0 by an error
+                                    // Check if $uploadOk is set to 0 by an error
                                     if ($uploadOk == 0) {
                                         echo "Sorry, your file was not uploaded.";
-// if everything is ok, try to upload file
+                                    // if everything is ok, try to upload file
                                     } else {
                                         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
                                             echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
@@ -103,11 +119,18 @@
 
                                             $imageId = $conn->lastInsertId();
 
-                                            $sqlupload = "insert into products(productName, categoryID, price, imagePathsID, description, createdBy, inStockQuantity) values ('$title', '$category','$price','$imageId','$description','$uid','$quantity')";
+                                            date_default_timezone_set("Asia/Dhaka");
+                                            $uploadDate = date("Y-m-d h:i:sa");
+
+
+
+                                            $sqlupload = "insert into products(productName, categoryID, price, imagePathsID, description, createdBy, inStockQuantity, totalSoldQuantity, createdDate, isDiscountAvailable, status) values ('$title', '$category','$price','$imageId','$description','$uid','$quantity',0,'$uploadDate',0,1)";
                                             //echo $sqlupload;
                                             $runupload = $conn->prepare($sqlupload);
                                             $runupload->execute();
-                                            echo '<script>alert("Product uploaded Successfully");</script>';
+                                           // echo '<script>alert("Product uploaded Successfully");</script>';
+                                            $_SESSION["msg"] = "Product uploaded Successfully";
+                                            echo '<script>window.location.href="inventory.php";</script>';
 
                                         } else {
                                             echo "Sorry, there was an error uploading your file.";

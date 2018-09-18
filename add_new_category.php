@@ -27,6 +27,27 @@
                     <h2>Add New Product Category</h2>
                 </div>
             </div>
+            <?php
+            if(isset($_SESSION["msg"])){
+                echo '
+                    <script>
+                         setTimeout(function () {
+                            $(\'#feedback\').fadeOut(4000);
+                         }, 5000);
+                    </script>
+                ';
+                echo '
+                <div id="feedback">
+                    <div class="alert alert-success">';
+                echo $_SESSION["msg"];
+                unset($_SESSION["msg"]);
+                echo '
+                    </div>
+                </div>
+                ';
+            }
+
+            ?>
 
             <div class="wrapper wrapper-content animated fadeInRightBig">
                 <div class="row">
@@ -59,12 +80,14 @@
                                             $sqlCategory = "insert into productCategory(categoryName, parentCategoryID) values ('$category', '$parent_category')";
                                             $runCategory = $conn->prepare($sqlCategory);
                                             $runCategory->execute();
-                                            echo '<script>alert("Category added.");</script>';
+                                            $_SESSION["msg"] = "Category added.";
+                                            echo '<script>window.location.reload();</script>';
                                         }else{
                                             $sqlCategory = "insert into productCategory(categoryName) values ('$category')";
                                             $runCategory = $conn->prepare($sqlCategory);
                                             $runCategory->execute();
-                                            echo '<script>alert("Category added.");</script>';
+                                            $_SESSION["msg"] = "Category added.";
+                                            echo '<script>window.location.reload();</script>';
                                         }
 
                                     }else{
@@ -118,14 +141,7 @@
                     </div>
                 </div>
             </div>
-            <div class="footer">
-                <div class="pull-right">
-                    Powered By <strong>Soft Domain Host</strong>.
-                </div>
-                <div>
-                    <strong>Copyright</strong> PentaRox &copy; 2018
-                </div>
-            </div>
+            <?php include 'assets/common/footer.php'; ?>
 
         </div>
         </div>

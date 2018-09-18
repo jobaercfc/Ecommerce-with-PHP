@@ -1,3 +1,6 @@
+<?php
+include "dbconfig.php";
+?>
 <!DOCTYPE html>
 <html>
 
@@ -35,6 +38,28 @@
 
             </div>
         </div>
+
+        <?php
+        if(isset($_SESSION["msg"])){
+            echo '
+                    <script>
+                         setTimeout(function () {
+                            $(\'#feedback\').fadeOut(4000);
+                         }, 5000);
+                    </script>
+                ';
+            echo '
+                <div id="feedback">
+                    <div class="alert alert-success">';
+            echo $_SESSION["msg"];
+            unset($_SESSION["msg"]);
+            echo '
+                    </div>
+                </div>
+                ';
+        }
+
+        ?>
 
         <div class="wrapper wrapper-content animated fadeInRight ecommerce">
 
@@ -92,16 +117,18 @@
                     <div class="ibox">
                         <div class="ibox-content">
 
-                            <table class="footable table table-stripped toggle-arrow-tiny tablet breakpoint footable-loaded" data-page-size="15">
+                            <table class="footable table table-striped table-bordered table-hover toggle-arrow-tiny tablet breakpoint footable-loaded" data-page-size="15">
                                 <thead>
                                 <tr>
 
                                     <th class="footable-visible footable-first-column footable-sortable">Order ID<span class="footable-sort-indicator"></span></th>
-                                    <th data-hide="phone" class="footable-visible footable-sortable">Customer<span class="footable-sort-indicator"></span></th>
-                                    <th data-hide="phone" class="footable-visible footable-sortable">Amount<span class="footable-sort-indicator"></span></th>
-                                    <th data-hide="phone" class="footable-visible footable-sortable">Date added<span class="footable-sort-indicator"></span></th>
-                                    <th data-hide="phone,tablet" class="footable-sortable" style="display: none;">Date modified<span class="footable-sort-indicator"></span></th>
-                                    <th data-hide="phone" class="footable-visible footable-sortable">Status<span class="footable-sort-indicator"></span></th>
+                                    <th class="footable-visible footable-first-column footable-sortable">Order Code<span class="footable-sort-indicator"></span></th>
+                                    <th data-hide="phone" class="footable-visible footable-sortable">Product title<span class="footable-sort-indicator"></span></th>
+                                    <th data-hide="phone" class="footable-visible footable-sortable">Price per unit<span class="footable-sort-indicator"></span></th>
+                                    <th data-hide="phone" class="footable-visible footable-sortable">Order Quantity<span class="footable-sort-indicator"></span></th>
+                                    <th data-hide="phone" class="footable-visible footable-sortable">Order Status<span class="footable-sort-indicator"></span></th>
+                                    <th data-hide="phone" class="footable-visible footable-sortable">Redeemed Code<span class="footable-sort-indicator"></span></th>
+                                    <th data-hide="phone" class="footable-visible footable-sortable">Delivery<span class="footable-sort-indicator"></span></th>
                                     <th class="text-right footable-visible footable-last-column footable-sortable">Action<span class="footable-sort-indicator"></span></th>
 
                                 </tr>
@@ -109,37 +136,88 @@
                                 <tbody>
 
                                 <?php
-                                    for($i = 0; $i < 3; $i++){
+
+                                $sql = "SELECT o.id as oid, o.status as orderstatus, o.*,p.* FROM (orders as o INNER JOIN products as p ON (o.productId = p.id)) where p.createdBy = '$uid'";
+                                $run = $conn->prepare($sql);
+                                $run->execute();
+
+                                if($run->rowCount() > 0) {
+                                    while ($row = $run->fetch(PDO::FETCH_ASSOC)) {
+                                        $title = $row["productName"];
+                                        $price = $row["price"];
+                                        //$description = $row["description"];
+                                        $orderquantity = $row["quantity"];
+                                        //$totalSoldQuantity = $row["totalSoldQuantity"];
+                                        //$image1 = $row["path1"];
+                                        //$category = $row["categoryName"];
+                                        $orderID = $row["oid"];
+                                        //$dateCreated = $row["createdDate"];
+                                        $discount = $row["isDiscountAvailable"];
+                                        //$parentCategoryID = $row["parentCategoryID"];
+                                        $orderStatus = $row["orderstatus"];
+                                        $orderCode = $row["orderCode"];
+
+                                        if($discount == 1){
+                                            $discount = "Available";
+                                        }else{
+                                            $discount = "N/A";
+                                        }
+
+                                        if($orderStatus == 1){
+                                            $orderStatus = '<label class="label label-primary">On Delivery</label>';
+                                        }else{
+                                            $orderStatus = '<label class="label label-danger">Pending</label>';
+                                        }
+
+
                                         echo '
                                             <tr class="footable-even" style="">
                                                 <td class="footable-visible footable-first-column"><span class="footable-toggle"></span>
-                                                    3214
+                                                    '.$orderID.'
+                                                </td>
+                                                
+                                                <td class="footable-visible">
+                                                    '.$orderCode.'
+                                                </td>
+                                                
+                                                <td class="footable-visible">
+                                                    '.$title.'
+                                                </td>
+                                                
+                                                
+                                                <td class="footable-visible">
+                                                    '.$price.'
                                                 </td>
                                                 <td class="footable-visible">
-                                                    Customer example
+                                                    '.$orderquantity.'
                                                 </td>
                                                 <td class="footable-visible">
-                                                    $500.00
+                                                    '.$orderStatus.'
                                                 </td>
+                                                
                                                 <td class="footable-visible">
-                                                    03/04/2015
+                                                    '.$discount.'
                                                 </td>
-                                                <td style="display: none;">
-                                                    03/05/2015
-                                                </td>
+                                                
                                                 <td class="footable-visible">
-                                                    <span class="label label-primary">Pending</span>
+                                                    <div class="btn-group">
+                                                        <button class="btn-primary btn btn-xs" id="sendDelivery" oid="'.$orderID.'">Send for delivery</button>
+                                                    </div>
                                                 </td>
+                                                
                                                 <td class="text-right footable-visible footable-last-column">
                                                     <div class="btn-group">
-                                                        <button class="btn-white btn btn-xs">View</button>
-                                                        <button class="btn-white btn btn-xs">Edit</button>
-                                                        <button class="btn-white btn btn-xs">Delete</button>
+                                                        <button class="btn-danger btn btn-xs" id="deleteOrder" oid="'.$orderID.'">Delete</button>
                                                     </div>
                                                 </td>
                                             </tr>
                                         ';
                                     }
+                                }else{
+                                    echo '<tr> <h1>You don\'t have any orders to show</h1></tr>';
+                                }
+
+
 
                                 ?>
 

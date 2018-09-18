@@ -81,7 +81,13 @@ $errorss = array();
         <p>Create account to see it in action.</p>
         <?php
             if(empty($errorss) && isset($_POST["signup"])){
-                $sql = "INSERT into users(phoneNumber, userRoleID, password, joiningdate) values ('$phone', '$userRoleID', '$pass', '$joinDate')";
+                $sql = "INSERT into contactDetails(name) values ('$name')";
+                $run = $conn->prepare($sql);
+                $run->execute();
+
+                $contactDetailsId = $conn->lastInsertId();
+
+                $sql = "INSERT into users(phoneNumber, userRoleID, password, joiningdate, contactDetailsID) values ('$phone', '$userRoleID', '$pass', '$joinDate', '$contactDetailsId')";
                 $run = $conn->prepare($sql);
                 $run->execute();
 
@@ -109,7 +115,6 @@ $errorss = array();
                 <select class="form-control" required="required" name="userRole">
                     <option>Merchant</option>
                     <option>Buyer</option>
-                    <option>Admin</option>
                 </select>
             </div>
 

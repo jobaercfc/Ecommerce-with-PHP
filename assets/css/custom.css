@@ -27,3 +27,20 @@
     border: 1px solid #ced4da;
     border-radius: .25rem;
 }
+.float-right {
+    float: right!important;
+}
+.float-left {
+    float: left!important;
+}
+.stock-available{
+    color: green;
+    font-size: medium;
+}
+.stock-details{
+    padding: 3px;
+    background-color: lawngreen;
+}
+.description-products{
+    font-size: medium;
+}

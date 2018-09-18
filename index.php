@@ -14,16 +14,21 @@
             $row = $run->fetch(PDO::FETCH_ASSOC);
             $matchPhone = $row["phoneNumber"];
 
-            $sql2 = "SELECT * FROM users where phoneNumber = '$matchPhone'";
+            $sql2 = "SELECT users.id as uid,users.*,contactDetails.* FROM (users inner join contactDetails on (users.contactDetailsID = contactDetails.id)) where phoneNumber = '$matchPhone'";
             $run2 = $conn->prepare($sql2);
             $run2->execute();
-            $row2 = $run2->fetch(PDO::FETCH_ASSOC);
+            if($run2->rowCount() == 1) {
+                $row2 = $run2->fetch(PDO::FETCH_ASSOC);
 
-            if($pass == $row2["password"]){
-                $_SESSION["u_id"] = $row2["id"];
-                echo "<script>window.location.href='dashboard.php';</script>";
-            }else{
-                echo '<script>alert("Wrong Credentials..");</script>';
+
+                if ($pass == $row2["password"]) {
+                    $_SESSION["u_id"] = $row2["uid"];
+                    $_SESSION["name"] = $row2["name"];
+
+                    echo "<script>window.location.href='dashboard.php';</script>";
+                } else {
+                    echo '<script>alert("Wrong Credentials..");</script>';
+                }
             }
         }else{
             echo '<script>alert("Wrong Credentials..")</script>';

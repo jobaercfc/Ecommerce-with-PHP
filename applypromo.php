@@ -49,34 +49,7 @@
                             <div class="text-center">
                                 <a data-toggle="modal" class="btn btn-primary" href="#modal-form">Apply Promo</a>
                             </div>
-                            <div id="modal-form" class="modal fade" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-sm-6 b-r"><h3 class="m-t-none m-b">Enter promo</h3>
 
-
-
-                                                    <form role="form">
-                                                        <div class="form-group"><label>Promo</label> <input type="text" placeholder="Enter promo" class="form-control"></div>
-                                                        <div>
-                                                            <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Go</strong></button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <h4>Referral</h4>
-                                                    <p>You can refer your friend</p>
-                                                    <p class="text-center">
-                                                        Your referral code : ecom123
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
