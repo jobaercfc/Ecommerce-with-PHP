@@ -7,7 +7,7 @@ $errorss = array();
         $name = $_POST["name"];
         $phone = $_POST["phone"];
         $pass = $_POST["password"];
-        $userRole = $_POST["userRole"];
+        $userRoleID = 1;
 
         $namecheck =  "/^[a-zA-Z ]+$/";
         $emailValidation = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9]+(\.[a-z]{2,4})$/";
@@ -22,7 +22,7 @@ $errorss = array();
         if(!(strlen($phone) == 11)){
             array_push($errorss, "Phone Number must contain 11 digits. Example : 01700000000");
         }else{
-            $sql = "SELECT id FROM users WHERE phoneNumber = '$phone'" ;
+            $sql = "SELECT id FROM users WHERE phoneNumber = '$phone'";
             $check_query = $conn->prepare($sql);
             $check_query->execute();
             $num = $check_query->rowCount();
@@ -37,15 +37,7 @@ $errorss = array();
             array_push($errorss, "Password must contain at least 6 characters.");
         }
 
-        if($userRole == "Merchant"){
-            $userRoleID = 1;
-        }
-        if($userRole == "Buyer"){
-            $userRoleID = 2;
-        }
-        if($userRole == "Admin"){
-            $userRoleID = 3;
-        }
+
         date_default_timezone_set("Asia/Dhaka");
         $joinDate = date("Y-m-d h:i:sa");
 
@@ -110,13 +102,7 @@ $errorss = array();
             <div class="form-group">
                 <input type="password" class="form-control" placeholder="Password" name="password" required="required">
             </div>
-            <div class="form-group">
-                <label>You are a : </label>
-                <select class="form-control" required="required" name="userRole">
-                    <option>Merchant</option>
-                    <option>Buyer</option>
-                </select>
-            </div>
+
 
             <input type="submit" value="Sign up for free" name="signup" class="btn btn-primary block full-width m-b" />
 

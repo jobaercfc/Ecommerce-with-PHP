@@ -29,18 +29,27 @@
                     <li><a href="category_list.php">Category List</a></li>
                 </ul>
             </li>
+
+            <?php
+            if($_SESSION["userRoleId"] == 2){
+                echo '
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Sell</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li><a href="addproduct.php">Add New Product</a></li>
+                                <li><a href="inventory.php">Inventory</a></li>
+                                <li><a href="pending_orders.php">Pending Orders</a></li>
+                                <!--<li><a href="order_list.php">Order List</a></li>
+                                <li><a href="sell_reports.php">Report</a></li>-->
+                            </ul>
+                        </li>
+                    
+                    ';
+            }
+            ?>
+
             <li>
-                <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Sell</span><span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li><a href="addproduct.php">Add New Product</a></li>
-                    <li><a href="inventory.php">Inventory</a></li>
-                    <li><a href="pending_orders.php">Pending Orders</a></li>
-                    <!--<li><a href="order_list.php">Order List</a></li>
-                    <li><a href="sell_reports.php">Report</a></li>-->
-                </ul>
-            </li>
-            <li>
-                <a href="mailbox.html"><i class="fa fa-envelope"></i> <span class="nav-label">Buy</span><span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-envelope"></i> <span class="nav-label">Buy</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li><a href="product.php">All Product</a></li>
                     <li><a href="wishlist.php">Wishlist</a></li>
@@ -68,9 +77,16 @@
             <li>
                 <a href="profile.php"><i class="fa fa-laptop"></i> <span class="nav-label">My Profile</span></a>
             </li>
-            <li class="special_link">
-                <a href="registration.php"><i class="fa fa-database"></i> <span class="nav-label">Become Seller</span></a>
-            </li>
+            <?php
+                if($_SESSION["userRoleId"] == 1){
+                    echo '
+                        <li class="special_link">
+                            <a href="#" id="becomeSeller"><i class="fa fa-database"></i> <span class="nav-label">Become Seller</span></a href="#">
+                        </li>
+                    
+                    ';
+                }
+            ?>
         </ul>
 
     </div>

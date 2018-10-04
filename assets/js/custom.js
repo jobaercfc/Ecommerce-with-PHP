@@ -171,3 +171,18 @@ function cart() {
     document.getElementById("total-checkout").innerText = total;
 }
 
+$("body").delegate("#becomeSeller", "click", function(event) {
+    event.preventDefault();
+    alert("dasd");
+    $.ajax({
+        url: "action.php",
+        method: "GET",
+        data: {
+            becomeSeller: 1
+        },
+        success: function(data) {
+            window.location.reload();
+        }
+    })
+});
+

@@ -24,6 +24,7 @@
                 if ($pass == $row2["password"]) {
                     $_SESSION["u_id"] = $row2["uid"];
                     $_SESSION["name"] = $row2["name"];
+                    $_SESSION["userRoleId"] = $row2["userRoleID"];
 
                     echo "<script>window.location.href='dashboard.php';</script>";
                 } else {

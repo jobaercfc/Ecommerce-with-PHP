@@ -205,3 +205,12 @@ if (isset($_GET["checkout"])){
         $_SESSION["msg"] = "Order Placed";
     }
 }
+
+//Convert to Seller
+if(isset($_GET["becomeSeller"])){
+    if($_GET["becomeSeller"] == 1){
+        $sql = "update users set userRoleID = '2' where id = '$uid'";
+        $run = $conn->prepare($sql);
+        $run->execute();
+    }
+}
