@@ -173,7 +173,6 @@ function cart() {
 
 $("body").delegate("#becomeSeller", "click", function(event) {
     event.preventDefault();
-    alert("dasd");
     $.ajax({
         url: "action.php",
         method: "GET",
