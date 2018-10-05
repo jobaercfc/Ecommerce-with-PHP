@@ -33,6 +33,27 @@
                     </div>
                 </div>
             </div>
+            <?php
+            if(isset($_SESSION["msg"])){
+                echo '
+                    <script>
+                         setTimeout(function () {
+                            $(\'#feedback\').fadeOut(4000);
+                         }, 5000);
+                    </script>
+                ';
+                echo '
+                <div id="feedback">
+                    <div class="alert alert-success">';
+                echo $_SESSION["msg"];
+                unset($_SESSION["msg"]);
+                echo '
+                    </div>
+                </div>
+                ';
+            }
+
+            ?>
 
             <div class="wrapper wrapper-content">
                 <div class="middle-box text-center animated fadeInRightBig">

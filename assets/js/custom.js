@@ -173,14 +173,33 @@ function cart() {
 
 $("body").delegate("#becomeSeller", "click", function(event) {
     event.preventDefault();
+    var becomeSellerPassword = document.getElementById("becomeSellerPassword").value;
     $.ajax({
         url: "action.php",
         method: "GET",
         data: {
-            becomeSeller: 1
+            becomeSeller: 1,
+            password: becomeSellerPassword
         },
         success: function(data) {
             window.location.reload();
+        }
+    })
+});
+
+$("body").delegate("#trackDeliveryButton", "click", function(event) {
+    event.preventDefault();
+    var trackDeliveryCode = document.getElementById("trackDeliveryCode").value;
+    $.ajax({
+        url: "action.php",
+        method: "GET",
+        data: {
+            trackDelivery: 1,
+            code: trackDeliveryCode
+        },
+        success: function(data) {
+            //window.location.reload();
+            document.getElementById("trackDeliveryReport").innerHTML = data;
         }
     })
 });

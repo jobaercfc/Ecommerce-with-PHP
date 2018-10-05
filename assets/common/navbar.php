@@ -31,7 +31,7 @@
             </li>
 
             <?php
-            if($_SESSION["userRoleId"] == 2){
+            if($_SESSION["userRoleId"] == 1){
                 echo '
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Sell</span><span class="fa arrow"></span></a>
@@ -72,16 +72,16 @@
                 </ul>
             </li>-->
             <li>
-                <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">Track Delivery</span></a>
+                <a href="#track-delivery" data-toggle="modal"><i class="fa fa-location-arrow"></i> <span class="nav-label">Track Delivery</span></a>
             </li>
             <li>
-                <a href="profile.php"><i class="fa fa-laptop"></i> <span class="nav-label">My Profile</span></a>
+                <a href="userprofile.php"><i class="fa fa-laptop"></i> <span class="nav-label">My Profile</span></a>
             </li>
             <?php
-                if($_SESSION["userRoleId"] == 1){
+                if($_SESSION["userRoleId"] == 2){
                     echo '
                         <li class="special_link">
-                            <a href="#" id="becomeSeller"><i class="fa fa-database"></i> <span class="nav-label">Become Seller</span></a href="#">
+                            <a data-toggle="modal" href="#modal-form"><i class="fa fa-database"></i><span class="nav-label">Become a Seller</span></a>
                         </li>
                     
                     ';
@@ -91,3 +91,46 @@
 
     </div>
 </nav>
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 b-r"><h3 class="m-t-none m-b">Sign In</h3>
+
+                        <p>Enter your password for activating Seller options.</p>
+
+                        <form role="form" method="post">
+                            <div class="form-group"><label>Password</label> <input id="becomeSellerPassword" type="password" placeholder="Your Password" class="form-control" required/></div>
+                            <div>
+                                <button id="becomeSeller" class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Become a Seller</strong></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="track-delivery" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row" id="trackDeliveryReport">
+                    <div class="col-md-12 b-r"><h3 class="m-t-none m-b">Track your delivery</h3>
+
+                        <p>Enter your Order code for Tracking your delivery.</p>
+
+                        <form role="form" method="post">
+                            <div class="form-group"><label>Order Code</label> <input id="trackDeliveryCode" type="text" placeholder="Your Order Code" class="form-control" required/></div>
+                            <div>
+                                <button id="trackDeliveryButton" class="btn btn-sm btn-primary float-right m-t-n-xs"><strong>Track</strong></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

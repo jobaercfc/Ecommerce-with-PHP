@@ -209,8 +209,52 @@ if (isset($_GET["checkout"])){
 //Convert to Seller
 if(isset($_GET["becomeSeller"])){
     if($_GET["becomeSeller"] == 1){
-        $sql = "update users set userRoleID = '2' where id = '$uid'";
+        $sql = "SELECT * FROM users where id = '$uid'";
         $run = $conn->prepare($sql);
         $run->execute();
+
+        if($run->rowCount() == 1) {
+            $row = $run->fetch(PDO::FETCH_ASSOC);
+            $matchPass = $row["password"];
+
+            $givenPass = $_GET["password"];
+
+            if($matchPass == $givenPass){
+                $sql = "update users set userRoleID = '2' where id = '$uid'";
+                $run = $conn->prepare($sql);
+                $run->execute();
+
+                $_SESSION["userRoleId"] = 1;
+
+                $_SESSION["msg"] = "You are successfully registered as a Seller";
+            }else{
+                $_SESSION["msg"] = "Wrong credentials. Please try again.";
+            }
+        }
+
+
+    }
+}
+
+//Track Delivery
+if(isset($_GET["trackDelivery"])){
+    if($_GET["trackDelivery"] == 1){
+        $code = $_GET["code"];
+        $sql = "SELECT * FROM orders where orderCode = '$code' group by orderCode";
+        $run = $conn->prepare($sql);
+        $run->execute();
+
+        if($run->rowCount() == 1) {
+            $row = $run->fetch(PDO::FETCH_ASSOC);
+            $status = $row["status"];
+
+            if($status == 0){
+                echo '<h3 style="color: red">Your order is not <strong>shipped yet</strong>.</h3>';
+            }else{
+                echo '<h3 style="color: green">Your order is sent for <strong>delivery</strong>. You will get it soon.</h3>';
+            }
+        }
+
+
     }
 }
