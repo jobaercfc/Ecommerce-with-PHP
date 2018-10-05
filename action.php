@@ -220,7 +220,7 @@ if(isset($_GET["becomeSeller"])){
             $givenPass = $_GET["password"];
 
             if($matchPass == $givenPass){
-                $sql = "update users set userRoleID = '2' where id = '$uid'";
+                $sql = "update users set userRoleID = '1' where id = '$uid'";
                 $run = $conn->prepare($sql);
                 $run->execute();
 
