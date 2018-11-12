@@ -67,6 +67,22 @@ $("body").delegate("#addtocart", "click", function(event) {
     })
 });
 
+$("body").delegate("#addtocarthome", "click", function(event) {
+    event.preventDefault();
+    var productId = $(this).attr("pid");
+    $.ajax({
+        url: "action.php",
+        method: "GET",
+        data: {
+            productId : productId,
+            cartWithoutLogin : 1
+        },
+        success: function(data) {
+            window.location.href = 'cart.php';
+        }
+    })
+});
+
 $("body").delegate("#sendDelivery", "click", function(event) {
     event.preventDefault();
     var orderId = $(this).attr("oid");
@@ -200,6 +216,24 @@ $("body").delegate("#trackDeliveryButton", "click", function(event) {
         success: function(data) {
             //window.location.reload();
             document.getElementById("trackDeliveryReport").innerHTML = data;
+        }
+    })
+});
+
+//Update Default Merchant Rate
+$("body").delegate("#update_default_percentage", "click", function(event) {
+    event.preventDefault();
+    var rate = document.getElementById("default_percentage").value;
+
+    $.ajax({
+        url: "action.php",
+        method: "POST",
+        data: {
+            update_rate: 1,
+            rate: rate
+        },
+        success: function(data) {
+            window.location.reload();
         }
     })
 });

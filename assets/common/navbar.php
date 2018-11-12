@@ -2,8 +2,15 @@
     session_start();
     if(isset($_SESSION["u_id"])){
         $uid = $_SESSION["u_id"];
+        if(isset($_SESSION["cartproductwithoutlogin"])){
+            $productIdWithoutLogin = $_SESSION["cartproductwithoutlogin"];
+            $sql = "INSERT INTO cartdetails(userID, productID) VALUES ('$uid', '$productIdWithoutLogin')";
+            $run = $conn->prepare($sql);
+            $run->execute();
+            unset($_SESSION["cartproductwithoutlogin"]);
+        }
     }else{
-        echo '<script>window.location.href="index.php";</script>';
+        echo '<script>window.location.href="login.php";</script>';
     }
 ?>
 <nav class="navbar-default navbar-static-side" role="navigation">
@@ -22,13 +29,19 @@
             <li class="active">
                 <a href="dashboard.php"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboards</span></a>
             </li>
-            <li>
-                <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Category Management</span><span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li><a href="add_new_category.php">Add New Category</a></li>
-                    <li><a href="category_list.php">Category List</a></li>
-                </ul>
-            </li>
+            <?php
+                if($_SESSION["userRoleId"] == 3){
+                    echo '
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Category Management</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li><a href="add_new_category.php">Add New Category</a></li>
+                                <li><a href="category_list.php">Category List</a></li>
+                            </ul>
+                        </li>
+                    ';
+                }
+                ?>
 
             <?php
             if($_SESSION["userRoleId"] == 1){
@@ -78,6 +91,15 @@
                 <a href="userprofile.php"><i class="fa fa-laptop"></i> <span class="nav-label">My Profile</span></a>
             </li>
             <?php
+                if($_SESSION["userRoleId"] == 3){
+                    echo '
+                            <li class="">
+                                <a href="account.php"><i class="fa fa-database"></i><span class="nav-label">Accounts</span></a>
+                            </li>
+                        
+                        ';
+                }
+
                 if($_SESSION["userRoleId"] == 2){
                     echo '
                         <li class="special_link">

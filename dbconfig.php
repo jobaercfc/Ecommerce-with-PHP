@@ -7,9 +7,11 @@
  */
 
 $servername = "localhost";
+/*$username = "bihar_ecom";
+$password = "bihar123";*/
+$db = "bihar_db";
 $username = "root";
 $password = "";
-$db = "bihar_db";
 
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);

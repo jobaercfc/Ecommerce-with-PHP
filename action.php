@@ -179,8 +179,9 @@ if (isset($_GET["checkout"])){
             $orderCode = "1200";
         }
         for($i = 0; $i < sizeof($ids); $i++){
+            $price = $quantityArrays[$i] * $prices[$i];
 
-            $sql = "insert into orders (userId, productId, quantity, status, orderCode) values('$uid', '$ids[$i]', '$quantityArrays[$i]', 0, '$orderCode')";
+            $sql = "insert into orders (userId, productId, quantity, status, orderCode,price) values('$uid', '$ids[$i]', '$quantityArrays[$i]', 0, '$orderCode', '$price')";
             $runCheckout = $conn->prepare($sql);
             $runCheckout->execute();
 
@@ -220,6 +221,20 @@ if(isset($_GET["becomeSeller"])){
             $givenPass = $_GET["password"];
 
             if($matchPass == $givenPass){
+                $sql = "SELECT default_rate FROM `merchant_comission` GROUP BY default_rate";
+                $run = $conn->prepare($sql);
+                $run->execute();
+
+                if($run->rowCount() == 1){
+                    $row = $run->fetch(PDO::FETCH_ASSOC);
+                    $default = $row["default_rate"];
+                }
+
+                $sql = "update merchant_comission set default_rate = '$default'";
+                $run = $conn->prepare($sql);
+                $run->execute();
+
+
                 $sql = "update users set userRoleID = '1' where id = '$uid'";
                 $run = $conn->prepare($sql);
                 $run->execute();
@@ -258,3 +273,24 @@ if(isset($_GET["trackDelivery"])){
 
     }
 }
+if(isset($_GET["cartWithoutLogin"])){
+    if($_GET["cartWithoutLogin"] == 1){
+        $_SESSION["cartproductwithoutlogin"] = $_GET["productId"];
+    }
+}
+
+//Update Merchant default Commission
+if(isset($_POST["update_rate"])){
+    if($_POST["update_rate"] == 1){
+        $rate = $_POST["rate"];
+
+        if($rate != ""){
+            $sql = "update merchant_comission set default_rate = '$rate'";
+            $run = $conn->prepare($sql);
+            $run->execute();
+        }else{
+            echo "Rate can't be null";
+        }
+    }
+}
+
